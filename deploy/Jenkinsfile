@@ -178,16 +178,16 @@ pipeline {
             // when { expression { return params.PROMPT_FOR_DEPLOY } }
             // agent { label 'deploy' }
             steps {
-                input 'Deploy this!?'
+                // input 'Deploy this?'
 
-                // script {
-                //     env.APPROAL_NUM = input message: 'Please enter the approval number',
-                //                         parameters: [string(defaultValue: '',
-                //                                     description: '',
-                //                                     name: 'APPROVAL_NUM')]
-                // }
+                script {
+                    env.APPROAL_NUM = input message: 'Please enter the approval number',
+                                        parameters: [string(defaultValue: '',
+                                                    description: '',
+                                                    name: 'APPROVAL_NUM')]
+                }
 
-                // echo "${env.APPROAL_NUM}"
+                echo "${env.APPROAL_NUM}"
             }
         }
 
