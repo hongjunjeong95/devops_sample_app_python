@@ -182,11 +182,12 @@ pipeline {
             echo "Stage Test"
         }
     }
-    post {
-        cleanup {
-            echo "Post cleanup"
-        }
-    }
+  }
+  post {
+      cleanup {
+          echo "Post cleanup"
+      }
+  }
     // stage('Prompt for deploy') {
     //     when { expression { return params.PROMPT_FOR_DEPLOY } }
     //     agent { label 'deploy' }
@@ -222,7 +223,7 @@ pipeline {
     //         }
     //     }
     // }
-  }
+//   }
 
 //   post {
 //     failure {
