@@ -171,7 +171,7 @@ pipeline {
         when { expression { return params.PUSH_DOCKER_IMAGE } }
         // agent { label 'build' }
         steps {
-            echo "Push Docker Image to ECR"
+            echo "Push Docker Image to ECR!"
             sh'''
                 aws ecr get-login-password --region ${REGION} | docker login --username AWS --password-stdin ${ECR_REPOSITORY}
                 docker push ${ECR_DOCKER_IMAGE}:${ECR_DOCKER_TAG}
