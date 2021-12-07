@@ -177,8 +177,8 @@ pipeline {
         stage('Prompt for deploy') {
             // when { expression { return params.PROMPT_FOR_DEPLOY } }
             // agent { label 'deploy' }
-            input 'Deploy this!?'
             steps {
+                input 'Deploy this!?'
 
                 // script {
                 //     env.APPROAL_NUM = input message: 'Please enter the approval number',
