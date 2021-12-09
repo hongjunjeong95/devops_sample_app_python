@@ -24,7 +24,7 @@ pipeline {
     ECR_DOCKER_TAG = "${params.DOCKER_TAG}"
 
     CODEBUILD_NAME = "jenkins-slave-lewisjeong-codebuild"
-    CODEBUILD_ARTIFACT_S3_NAME = "jenkins-slave-artifact-codebuild-s3"
+    CODEBUILD_ARTIFACT_S3_NAME = "jenkins-slave-lewisjeong-artifact-codebuild-s3"
     CODEBUILD_ARTIFACT_S3_KEY = "${currentBuild.number}/jenkins-slave-lewisjeong-codebuild"
     CODEDEPLOY_NAME = "demo-codedeploy-app"
     CODEDEPLOY_GROUP_NAME = "dev-codedeploy-group"
