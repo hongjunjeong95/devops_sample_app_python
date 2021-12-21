@@ -1,80 +1,26 @@
+# Use the latest 2.1 version of CircleCI pipeline process engine.
+# See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
-orbs:
-  aws-cli: circleci/aws-cli@2.0.3
-  aws-ecr: circleci/aws-ecr@7.2.0
-
-commands:
-  test:
+# Define a job to be invoked later in a workflow.
+# See: https://circleci.com/docs/2.0/configuration-reference/#jobs
+jobs:
+  say-hello:
+    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
+    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
+    docker:
+      - image: cimg/base:stable
+    # Add steps to the job
+    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
       - checkout
-      - run: |
-          aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ECR_ACCOUNT_URL
-      - run: |
-          docker run --rm \
-            $AWS_ECR_ACCOUNT_URL/$APP_NAME:$(cat VERSION) \
-            /root/.local/bin/pytest -v
-      - persist_to_workspace:
-          root: .
-          paths: VERSION
-  cd:
-    steps:
-      - attach_workspace:
-          at: .
-      - run: |
-          export VERSION=`cat VERSION`;
+      - run:
+          name: "Say hello"
+          command: "echo Hello, World!"
 
-          wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64.tar.gz -O - |\
-            tar xz && sudo mv yq_linux_amd64 /usr/bin/yq;
-
-          git clone https://github.com/dev-chulbuji/devops_k8s.git && cd devops_k8s;
-
-          yq eval -i '.image.tag = env(VERSION)' 'demo/values.yaml';
-
-          git config --global user.email "dev-chulbuji@gmail.com";
-          git config --global user.name "dev-chulbuji";
-
-          git add demo/values.yaml;
-          git commit --message "Update demo image tag to $VERSION";
-          git push https://$GITHUB_TOKEN@github.com/dev-chulbuji/devops_k8s.git;
-
-executors:
-  circleciubuntu:
-    machine:
-      image: ubuntu-2004:202010-01
-
-jobs:
-  test:
-    executor: aws-cli/default
-    steps:
-      - aws-cli/setup:
-          profile-name: default
-      - setup_remote_docker:
-          docker_layer_caching: true
-          version: 20.10.7 # docker version
-      - test
-  deploy:
-    executor: circleciubuntu
-    steps:
-      - cd
-
+# Invoke jobs via workflows
+# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
-  cicd:
+  say-hello-workflow:
     jobs:
-      - aws-ecr/build-and-push-image:
-          name: build-and-push-image
-          context: AWS
-          checkout: true
-          tag: $(cat VERSION)
-          repo: demo
-          filters:
-            branches:
-              only: master
-      - test:
-          context: AWS
-          requires:
-            - build-and-push-image
-      - deploy:
-          context: GIT
-          requires:
-            - test
+      - say-hello
